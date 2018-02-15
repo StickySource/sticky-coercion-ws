@@ -23,6 +23,9 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.stickycode.coercion.AbstractNoDefaultCoercion;
 import net.stickycode.coercion.CoercionTarget;
 import net.stickycode.stereotype.plugin.StickyExtension;
@@ -31,6 +34,8 @@ import net.stickycode.stereotype.plugin.StickyExtension;
 public class WebServiceCoercion
     extends AbstractNoDefaultCoercion<Object> {
 
+  private Logger log = LoggerFactory.getLogger(getClass());
+
   @Override
   public Object coerce(CoercionTarget type, String value) {
     URL wsdlDocumentLocation = createWsdlUrl(type, value);
@@ -38,11 +43,10 @@ public class WebServiceCoercion
     String namespace = deriveNamespace(type.getType(), annotation);
     String serviceName = deriveServiceName(annotation, type.getType());
     try {
+      log.info("creating service proxy {} using proxy of {} and wsdl", serviceName, type.getType().getName(), wsdlDocumentLocation);
       Service service = Service.create(wsdlDocumentLocation, new QName(namespace, serviceName));
       Object port = service.getPort(type.getType());
       ((BindingProvider) port).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, value);
-      
-//      "com.sun.xml.ws.request.timeout"
       return port;
     }
     catch (Throwable t) {
@@ -71,20 +75,22 @@ public class WebServiceCoercion
     if (value.length() == 0)
       throw new UnparseableUrlForWebServiceException(value);
 
-    URL classpathWsdl = type.getType().getResource(deriveSimpleName(type.getType().getSimpleName()) + ".wsdl");
+    String wsdlName = deriveSimpleName(type.getType().getSimpleName()) + ".wsdl";
+    URL classpathWsdl = type.getType().getResource(wsdlName);
     if (classpathWsdl != null)
       return classpathWsdl;
-    
+
     // If the ws is local aka unitesting the their will be no wsdl
     // or the wsdl is already on the classpath so no issue
     // returning null works fine in this case
     if (value.startsWith("local://"))
-      return null; 
-    
+      return null;
+
+    log.debug("wsdl not found on classpath at {}/{} loading from remote", type.getType().getPackage().getName(), wsdlName);
     try {
       if (value.contains("?WSDL"))
         return new URL(value);
-      
+
       return new URL(value + "?WSDL");
     }
     catch (MalformedURLException e) {
@@ -94,12 +100,9 @@ public class WebServiceCoercion
 
   String deriveServiceName(WebService annotation, Class<?> webServiceClass) {
     String serviceName = annotation.serviceName();
-    
+
     if (serviceName.length() > 0)
       return serviceName;
-    
-    if (annotation.name().length() > 0)
-      return annotation.name();
 
     return deriveSimpleName(webServiceClass.getSimpleName());
   }
@@ -107,7 +110,7 @@ public class WebServiceCoercion
   private String deriveSimpleName(String simpleName) {
     if (simpleName.endsWith("PortType"))
       return simpleName.substring(0, simpleName.length() - "PortType".length()) + "Service";
-    
+
     return simpleName + "Service";
   }
 
