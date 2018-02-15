@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright (c) 2012 RedEngine Ltd, http://www.redengine.co.nz. All rights reserved. -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<parent>
 		<groupId>net.stickycode.parent</groupId>
 		<artifactId>sticky-parent-jar8</artifactId>
@@ -10,7 +10,7 @@
 
 	<groupId>net.stickycode</groupId>
 	<artifactId>sticky-coercion-ws</artifactId>
-	<version>5.2-SNAPSHOT</version>
+	<version>5.2</version>
 	<packaging>jar</packaging>
 
 	<name>sticky-coercion-ws-5</name>
@@ -20,7 +20,8 @@
 
 	<scm>
 		<connection>${git.url}</connection>
-	</scm>
+	  <tag>sticky-coercion-ws-5.2</tag>
+  </scm>
 
 	<dependencies>
 		<dependency>
@@ -33,7 +34,7 @@
 		<dependency>
 			<groupId>net.stickycode</groupId>
 			<artifactId>sticky-coercion</artifactId>
-			<version>[6.1,7)</version>
+			<version>[6.2,7)</version>
 		</dependency>
 	</dependencies>
 </project>
