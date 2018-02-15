@@ -71,7 +71,7 @@ public class WebServiceCoercion
     if (value.length() == 0)
       throw new UnparseableUrlForWebServiceException(value);
 
-    URL classpathWsdl = type.getType().getResource(type.getType().getSimpleName() + ".wsdl");
+    URL classpathWsdl = type.getType().getResource(deriveSimpleName(type.getType().getSimpleName()) + ".wsdl");
     if (classpathWsdl != null)
       return classpathWsdl;
     
@@ -101,7 +101,14 @@ public class WebServiceCoercion
     if (annotation.name().length() > 0)
       return annotation.name();
 
-    return webServiceClass.getSimpleName() + "Service";
+    return deriveSimpleName(webServiceClass.getSimpleName());
+  }
+
+  private String deriveSimpleName(String simpleName) {
+    if (simpleName.endsWith("PortType"))
+      return simpleName.substring(0, simpleName.length() - "PortType".length()) + "Service";
+    
+    return simpleName + "Service";
   }
 
   private String deriveNamespace(Class<?> type, WebService annotation) {

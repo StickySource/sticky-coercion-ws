@@ -72,7 +72,7 @@ public class WebServiceCoercionTest {
     Endpoint endpoint = Endpoint.publish(WS_URL, implementor);
     try {
       TestWs coerced = (TestWs) new WebServiceCoercion()
-          .coerce(CoercionTargets.find(TestWs.class), WS_URL);
+        .coerce(CoercionTargets.find(TestWs.class), WS_URL);
       assertThat(coerced).isNotNull();
       assertThat(coerced.giveMe()).isEqualTo("1");
       assertThat(coerced.giveMe()).isEqualTo("2");
@@ -82,14 +82,14 @@ public class WebServiceCoercionTest {
       endpoint.stop();
     }
   }
-  
+
   @Test
   public void coerceWithTrailingConfiguration() {
     WhatTestWs implementor = new WhatTestWs();
     Endpoint endpoint = Endpoint.publish(WS_URL, implementor);
     try {
       TestWs coerced = (TestWs) new WebServiceCoercion()
-      .coerce(CoercionTargets.find(TestWs.class), WS_URL + "?WSDL");
+        .coerce(CoercionTargets.find(TestWs.class), WS_URL + "?WSDL");
       assertThat(coerced).isNotNull();
       assertThat(coerced.giveMe()).isEqualTo("1");
       assertThat(coerced.giveMe()).isEqualTo("2");
