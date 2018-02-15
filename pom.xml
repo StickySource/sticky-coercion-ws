@@ -32,6 +32,12 @@
     </dependency>
 
     <dependency>
+      <groupId>net.stickycode.composite</groupId>
+      <artifactId>sticky-composite-logging-api</artifactId>
+      <version>[3,4)</version>
+    </dependency>
+
+    <dependency>
       <groupId>net.stickycode</groupId>
       <artifactId>sticky-coercion</artifactId>
       <version>[6.2,7)</version>
